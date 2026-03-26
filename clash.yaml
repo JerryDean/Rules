@@ -1,0 +1,119 @@
+# OpenClash / Clash Premium YAML 模板
+port: 7890
+socks-port: 7891
+allow-lan: true
+mode: rule
+log-level: info
+external-controller: :9090
+
+# 节点插槽
+proxies:
+  - insert_here
+
+# 策略组定义
+proxy-groups:
+  - name: 节点选择
+    type: select
+    proxies:
+      - DIRECT
+      - HK
+      - TW
+      - SG
+      - JP
+      - KR
+      - US
+      - 其他节点
+
+  - name: Gemini
+    type: select
+    proxies:
+      - HK
+      - TW
+      - SG
+      - JP
+      - KR
+      - US
+      - 其他节点
+
+  - name: HK
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/香港/]
+
+  - name: TW
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/台湾/]
+
+  - name: SG
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/新加坡/]
+
+  - name: JP
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/日本/]
+
+  - name: KR
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/韩国/]
+
+  - name: US
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/美国/]
+
+  - name: 其他节点
+    type: select
+    proxies:
+      - [/^((?!香港|台湾|新加坡|日本|韩国|美国).)*$/]
+
+# 规则集配置 (Rule Providers)
+rule-providers:
+  gemini_provider:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/classical/google-gemini.list"
+    path: ./ruleset/gemini.yaml
+    interval: 86400
+
+# 路由规则
+rules:
+  # 对应原 .ini 中的自定义直连/特定节点规则
+  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,SG
+  - DOMAIN-SUFFIX,googleapis.cn,SG
+  
+  # Gemini 规则
+  - RULE-SET,gemini_provider,Gemini
+  
+  # GEOSITE 直连规则
+  - GEOSITE,google-cn,DIRECT
+  - GEOSITE,apple-cn,DIRECT
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,category-game-platforms-download@cn,DIRECT
+  - GEOSITE,steam@cn,DIRECT
+  - GEOSITE,epicgames@cn,DIRECT
+  - GEOSITE,CN,DIRECT
+  
+  # 兜底规则
+  - MATCH,节点选择
