@@ -1,42 +1,14 @@
-dns:
-  enable: true
-  default-nameserver:
-    - 223.5.5.5
-    - 119.29.29.29
-    - 114.114.114.114
-  use-hosts: true
-  nameserver:
-    - https://sm2.doh.pub/dns-query
-    - https://dns.alidns.com/dns-query
-  fallback:
-    - 8.8.4.4
-    - 208.67.220.220
-  fallback-filter:
-    geoip: true
-    geoip-code: CN
-    ipcidr:
-      - 240.0.0.0/4
-      - 127.0.0.1/32
-      - 0.0.0.0/32
-    domain:
-      - '+.google.com'
-      - '+.facebook.com'
-      - '+.youtube.com'
-  nameserver-policy:
-    "sdtul.itae.qzz.io":
-      - https://dns.alidns.com/dns-query
-      - https://doh.cm.edu.kg/CMLiussss
-    "cloudflare-ech.com":
-      - https://dns.alidns.com/dns-query
-      - https://doh.cm.edu.kg/CMLiussss
+# OpenClash / Clash Premium YAML 模板
 port: 7890
 socks-port: 7891
 allow-lan: true
 mode: rule
 log-level: info
-external-controller: 127.0.0.1:9090
+external-controller: :9090
+
 proxies:
   - insert_here
+
 proxy-groups:
   - name: 🚀 节点选择
     type: select
