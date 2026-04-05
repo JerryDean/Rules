@@ -1,0 +1,79 @@
+# OpenClash / Clash Premium YAML 模板
+port: 7890
+socks-port: 7891
+allow-lan: true
+mode: rule
+log-level: info
+external-controller: :9090
+
+# 节点插槽
+proxies:
+  - insert_here
+
+# 策略组定义
+proxy-groups:
+  - name: node-selector
+    type: select
+    proxies:
+      - DIRECT
+      - HK
+      - SG
+      - JP
+      - MY
+
+  - name: HK
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/HK/]
+
+  - name: SG
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/SG/]
+
+  - name: JP
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/JP/]
+
+  - name: MY
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - [/MY/]
+
+rule-providers:
+  cf-cdn:
+    type: file
+    behavior: ipcidr
+    path: ./cf-cdn.txt
+
+# 路由规则
+rules:
+  # 对应原 .ini 中的自定义直连/特定节点规则
+  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,SG
+  - DOMAIN-SUFFIX,googleapis.cn,SG
+  - RULE-SET,cf-cdn,node-selector,no-resolve
+  # GEOSITE 直连规则
+  - GEOSITE,google-cn,DIRECT
+  - GEOSITE,apple-cn,DIRECT
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,category-game-platforms-download@cn,DIRECT
+  - GEOSITE,steam@cn,DIRECT
+  - GEOSITE,epicgames@cn,DIRECT
+  - GEOSITE,CN,DIRECT
+  - GEOIP,CN,DIRECT,no-resolve
+
+  # 兜底规则
+  - MATCH,node-selector
