@@ -12,7 +12,7 @@ proxies:
 
 # 策略组定义
 proxy-groups:
-  - name: node-selector
+  - name: nodes
     type: select
     proxies:
       - DIRECT
@@ -44,18 +44,12 @@ proxy-groups:
     proxies:
       - [/JP/]
 
-rule-providers:
-  cf-cdn:
-    type: file
-    behavior: ipcidr
-    path: ./cf-cdn.txt
-
 # 路由规则
 rules:
   # 对应原 .ini 中的自定义直连/特定节点规则
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,SG
   - DOMAIN-SUFFIX,googleapis.cn,SG
-  - RULE-SET,cf-cdn,node-selector,no-resolve
+
   # GEOSITE 直连规则
   - GEOSITE,google-cn,DIRECT
   - GEOSITE,apple-cn,DIRECT
@@ -67,4 +61,4 @@ rules:
   - GEOIP,CN,DIRECT,no-resolve
 
   # 兜底规则
-  - MATCH,node-selector
+  - MATCH,nodes
